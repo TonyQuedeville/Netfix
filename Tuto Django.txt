@@ -1,0 +1,53 @@
+Django:
+
+1 - Installation de Django :
+Pour commencer à utiliser Django, vous devez l'installer. Vous pouvez le faire en utilisant pip, l'outil de gestion des paquets Python. 
+Voici comment installer Django :
+
+pip install django
+Création d'un projet Django :
+Une fois Django installé, vous pouvez créer un nouveau projet Django à l'aide de la commande suivante :
+
+django-admin startproject nomduprojet
+Cela créera un répertoire avec la structure de base de votre projet Django.
+
+Dépendences: 
+  pip install -r requirements.txt
+
+Migrations:
+  python3 manage.py makemigrations
+  python3 manage.py migrate
+
+2 - Applications Django :
+Django est basé sur une architecture modulaire. Les fonctionnalités de votre application web sont organisées en "applications". 
+Vous pouvez créer une nouvelle application avec la commande suivante :
+
+python manage.py startapp nomdelapplication
+Une application Django peut être réutilisée dans différents projets, ce qui en fait un moyen puissant d'organiser votre code.
+
+3 - Modèles :
+Django propose un système de modèles qui vous permet de définir la structure de votre base de données en utilisant des classes Python. 
+Vous pouvez créer, mettre à jour et interroger votre base de données en utilisant ces modèles.
+
+4 - Vues et URLs :
+Les vues dans Django sont responsables de la logique métier de votre application. Les URL permettent de mapper les requêtes HTTP aux vues 
+correspondantes. Vous définissez les vues dans les fichiers Python et configurez les URL dans le fichier urls.py.
+
+5 - Templates :
+Django utilise un moteur de templates pour générer du contenu HTML dynamique. Vous pouvez créer des templates HTML réutilisables et 
+les remplir avec des données provenant de vos vues.
+
+6 - Gestion des formulaires :
+Django offre un système de gestion de formulaires qui simplifie la création et la validation de formulaires HTML.
+
+7 - Authentification et autorisation :
+Django fournit également des mécanismes intégrés pour gérer l'authentification des utilisateurs et l'autorisation d'accéder à certaines 
+parties de votre application.
+
+8 - Administration Django :
+Django propose une interface d'administration automatiquement générée pour gérer les données de votre application. 
+Vous pouvez personnaliser cette interface pour répondre à vos besoins spécifiques.
+
+9 - Déploiement :
+Une fois que votre application Django est prête, vous pouvez la déployer sur un serveur web pour qu'elle soit accessible en ligne. 
+Il existe de nombreuses options de déploiement, y compris des services d'hébergement web, des serveurs dédiés et des plateformes cloud.

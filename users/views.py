@@ -4,7 +4,8 @@ from django.views.generic import CreateView, TemplateView
 
 from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
 from .models import User, Company, Customer
-
+from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
+from django.views.decorators.csrf import csrf_protect
 
 def register(request):
     return render(request, 'users/register.html')
@@ -40,5 +41,19 @@ class CompanySignUpView(CreateView):
         return redirect('/')
 
 
+
+@csrf_protect
 def LoginUserView(request):
-    pass
+    if request.method == 'POST':
+        form = UserLoginForm(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+            user = authenticate(request, username=email, password=password)
+            if user is not None:
+                login(request, user)
+                return redirect('/')  # Modifiez 'home' pour correspondre à votre URL
+    else:
+        form = UserLoginForm()
+    
+    return render(request, 'users/login.html', {'form': form})
