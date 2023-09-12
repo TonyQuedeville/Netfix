@@ -7,8 +7,16 @@
     <h2>Login</h2>
     <form method="post">
         {% csrf_token %}
-        {{ form.email.label_tag }} {{ form.email }}
+        {{ form.username.label_tag }} {{ form.username }}
+        <!-- {{ form.email.label_tag }} {{ form.email }} -->
         {{ form.password.label_tag }} {{ form.password }}
         <button type="submit">Login</button>
     </form>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 {% endblock %}

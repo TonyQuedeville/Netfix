@@ -3,7 +3,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-
 from .models import User, Company, Customer
 
 # widget personnalisée pour les champs de date
@@ -23,6 +22,11 @@ class CustomerSignUpForm(UserCreationForm):
         widget=forms.EmailInput(attrs={'placeholder': 'Enter Email'}),
         label='Adresse Email'  # Définir l'intitulé personnalisé ici
     )
+    username = forms.CharField(
+        max_length=100, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter username'}),
+        label='User name'
+    )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password'}),
         label='Mot de passe'  # Définir l'intitulé personnalisé ici
@@ -31,13 +35,13 @@ class CustomerSignUpForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}),
         label='Confirmez le mot de passe'  # Définir l'intitulé personnalisé ici
     )
-    birth = forms.DateField(
+    date_of_birth = forms.DateField(
         widget=DateInput(attrs={'placeholder': 'Enter Date of Birth'}),
         label='Date de Naissance'  # Définir l'intitulé personnalisé ici
     )
     class Meta:
-        model = Customer
-        fields =  ('birth',)
+        model = User
+        fields = UserCreationForm.Meta.fields + ('username','email', 'date_of_birth', 'password1', 'password2')
 
 # formulaire d'inscription entreprise
 class CompanySignUpForm(UserCreationForm):
@@ -45,6 +49,11 @@ class CompanySignUpForm(UserCreationForm):
         max_length=100, 
         widget=forms.EmailInput(attrs={'placeholder': 'Enter Email'}),
         label='Adresse Email'
+    )
+    username = forms.CharField(
+        max_length=100, 
+        widget=forms.TextInput(attrs={'placeholder': 'Enter Compagny name'}),
+        label='Compagny name'
     )
     password1 = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password'}),
@@ -54,24 +63,40 @@ class CompanySignUpForm(UserCreationForm):
         widget=forms.PasswordInput(attrs={'placeholder': 'Confirm Password'}),
         label='Confirmez le mot de passe'
     )
-    field = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': 'Enter Field'}),
+    field = forms.ChoiceField(
+        choices=(
+            ('All in One', 'Tout en un'),
+            ('Air Conditioner', 'Climatisation'),
+            ('Carpentry', 'Menuiserie'),
+            ('Electricity', 'Électricité'),
+            ('Gardening', 'Jardinage'),
+            ('Home Machines', 'Appareils ménagers'),
+            ('House Keeping', 'Entretien ménager'),
+            ('Interior Design', 'Design intérieur'),
+            ('Locks', 'Serrures'),
+            ('Painting', 'Peinture'),
+            ('Plumbing', 'Plomberie'),
+            ('Water Heaters', 'Chauffe-eau')
+        ),
         label='Domaine'
     )
     
     class Meta:
-        model = Company
-        fields = ('field', 'rating')
+        model = User
+        fields = ('username', 'email', 'field')
+
 
 # formulaire de login
 class UserLoginForm(forms.Form):
-    email = forms.EmailField(widget=forms.TextInput(
-        attrs={'placeholder': 'Enter Email'}))
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter Username'}))
+    # email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Enter Email'}))
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': 'Enter Password'}))
     
     def __init__(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)
-        self.fields['email'].widget.attrs['autocomplete'] = 'off'
-        self.fields['email'].widget.attrs['placeholder'] = 'Enter Email'
+        self.fields['username'].widget.attrs['autocomplete'] = 'off'
+        self.fields['username'].widget.attrs['placeholder'] = 'Enter Username'
+        # self.fields['email'].widget.attrs['autocomplete'] = 'off'
+        # self.fields['email'].widget.attrs['placeholder'] = 'Enter Email'
         self.fields['password'].widget.attrs['placeholder'] = 'Enter Password'

@@ -1,0 +1,21 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Companies List
+{% endblock %}
+
+{% block content %}
+    <p class="title">Companies</p>
+    {% for company in companies %}
+        <li>
+            <p>
+                {% if company.field == "All in One" %}
+                    {{ company.field }} - <a href="/company/{{ company.user.username }}">{{ company.user.username }}</a>
+                {% else %}
+                    <a href="{{ company.get_field_url }}">{{ company.field }}</a> - <a href="/company/{{ company.user.username }}">{{ company.user.username }}</a>
+                {% endif %}
+                Email: {{ company.user.email }} -- Rating: {{ company.rating }} 
+            </p>
+        </li>
+    {% endfor %}
+{% endblock %}

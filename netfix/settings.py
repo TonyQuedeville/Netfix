@@ -29,6 +29,15 @@ ALLOWED_HOSTS = []
 
 AUTH_USER_MODEL = 'users.User'
 
+# Durée de vie de la session en secondes (par défaut : 1209600, soit 2 semaines)
+# valeur par défaut est de 2 semaines, soit 1209600 secondes.
+SESSION_COOKIE_AGE = 3600 * 8  # 8 heures
+
+# L'utilisation de sessions sécurisées signifie que les cookies de session sont sécurisés
+# pour empêcher les attaques de vol de session.
+# True signifie que les cookies de session ne seront envoyés que sur des connexions sécurisées (HTTPS)
+# SESSION_COOKIE_SECURE = False 
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -68,6 +77,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'netfix.context_processors.companies',
             ],
         },
     },
@@ -107,13 +117,17 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',  # Utilisez le backend par défaut
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'fr-FR'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Paris'
 
 USE_I18N = True
 
@@ -133,3 +147,4 @@ LOGOUT_REDIRECT_URL = LOGIN_URL
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static/')]
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')

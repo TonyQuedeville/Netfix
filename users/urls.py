@@ -3,7 +3,7 @@ from django.contrib.auth import views
 
 from .forms import UserLoginForm
 from django.contrib.auth import views as auth_views
-from . import views as v, forms as f
+from . import views as v
 
 urlpatterns = [
     path('users/register/', v.register, name='register'),

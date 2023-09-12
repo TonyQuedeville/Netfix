@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% block title %}
+    Services Create
+{% endblock %}
+
+{% block content %}
+<p class="title">Create Service</p>
+<form method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit" name="register">Create new service</button>
+
+    <script src="{% static 'JavaScript/custom.js' %}"></script>
+</form>
+{% endblock %}

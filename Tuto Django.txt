@@ -4,19 +4,29 @@ Django:
 Pour commencer à utiliser Django, vous devez l'installer. Vous pouvez le faire en utilisant pip, l'outil de gestion des paquets Python. 
 Voici comment installer Django :
 
-pip install django
-Création d'un projet Django :
-Une fois Django installé, vous pouvez créer un nouveau projet Django à l'aide de la commande suivante :
+  Création d'un projet Django :
+  pip install django
 
-django-admin startproject nomduprojet
-Cela créera un répertoire avec la structure de base de votre projet Django.
+  Une fois Django installé, vous pouvez créer un nouveau projet Django à l'aide de la commande suivante :
+  django-admin startproject nomduprojet
+  Cela créera un répertoire avec la structure de base de votre projet Django.
 
-Dépendences: 
-  pip install -r requirements.txt
+  Dépendences: 
+    pip install -r requirements.txt
 
-Migrations:
-  python3 manage.py makemigrations
-  python3 manage.py migrate
+  Migrations:
+    python3 manage.py makemigrations
+    python3 manage.py migrate
+
+  Création du superuser:
+    cd netfix
+    python3 manage.py createsuperuser
+    suivre les instructions pour spécifier le nom d'utilisateur, l'adresse e-mail et le mot de passe pour le superutilisateur.
+    - Username: toto
+    - Email: toto@gmail.com
+    - Password: 0000Toto
+    - Password (again): 0000Toto
+    Superuser created successfully.
 
 2 - Applications Django :
 Django est basé sur une architecture modulaire. Les fonctionnalités de votre application web sont organisées en "applications". 

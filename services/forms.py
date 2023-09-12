@@ -1,27 +1,76 @@
 from django import forms
-
+from decimal import Decimal
+from django.core.validators import MinValueValidator
 from users.models import Company
+from .models import Service
 
 
-class CreateNewService(forms.Form):
-    name = forms.CharField(max_length=40)
-    description = forms.CharField(widget=forms.Textarea, label='Description')
-    price_hour = forms.DecimalField(
-        decimal_places=2, max_digits=5, min_value=0.00)
-    field = forms.ChoiceField(required=True)
-
-    def __init__(self, *args, choices='', ** kwargs):
+class CreateNewService(forms.ModelForm):
+    name = forms.CharField(max_length=40,  label='Service Name', 
+                            widget=forms.TextInput(attrs={'placeholder': 'Enter Service Name'}))
+    description = forms.CharField(widget=forms.Textarea(attrs={'placeholder': 'Enter Description'}), label='Description')
+    price_hour = forms.DecimalField(decimal_places=2, max_digits=5, 
+                                    validators=[MinValueValidator(Decimal('0.00'))], 
+                                    widget=forms.NumberInput(attrs={'placeholder': 'Enter Price per Hour', 'id': 'hour-input', 'step': '0.05'}),
+                                    label='Price per Hour',
+                                    initial='0.00')
+    
+    field = forms.ChoiceField(
+        required=True, 
+        label='Field', 
+        help_text='Select the field to which this service belongs.',
+    )
+    
+    def __init__(self, *args, ** kwargs):
+        initial = kwargs.get('initial', {})
+        field = initial.get('field', None)
         super(CreateNewService, self).__init__(*args, **kwargs)
-        # adding choices to fields
-        if choices:
-            self.fields['field'].choices = choices
+        
         # adding placeholders to form fields
         self.fields['name'].widget.attrs['placeholder'] = 'Enter Service Name'
+        self.fields['name'].widget.attrs['autocomplete'] = 'off'
         self.fields['description'].widget.attrs['placeholder'] = 'Enter Description'
         self.fields['price_hour'].widget.attrs['placeholder'] = 'Enter Price per Hour'
+        
+        # Choix par defaut (mais ça marche pas ... !)
+        if field:
+            self.fields['field'].choices = [(field, field)]
+            
+        # Méthode d'ajout des choix du champ field en dynamique
+        self.fields['field'].choices = [
+            ('Air Conditioner', 'Climatisation'),
+            ('Carpentry', 'Menuiserie'),
+            ('Electricity', 'Électricité'),
+            ('Gardening', 'Jardinage'),
+            ('Home Machines', 'Appareils ménagers'),
+            ('House Keeping', 'Entretien ménager'),
+            ('Interior Design', 'Design intérieur'),
+            ('Locks', 'Serrures'),
+            ('Painting', 'Peinture'),
+            ('Plumbing', 'Plomberie'),
+            ('Water Heaters', 'Chauffe-eau')
+        ]
+    
+    def clean_price_hour(self):
+        price_hour = self.cleaned_data.get('price_hour')
+        if price_hour <= Decimal('0.00'):
+            raise forms.ValidationError("Price per hour must be greater than 0.")
+        return price_hour
+    
+    class Meta:
+        model = Service  # Le modèle associé à ce formulaire
+        fields = ['field', 'name', 'description', 'price_hour']
 
-        self.fields['name'].widget.attrs['autocomplete'] = 'off'
 
-
-class RequestServiceForm(forms.Form):
-    pass
+class RequestServiceForm(forms.ModelForm):
+    address = forms.CharField(max_length=100,  label='Address', 
+                        widget=forms.TextInput(attrs={'placeholder': 'Enter Address'}))
+    service_hours = forms.DecimalField(decimal_places=2, max_digits=5, 
+                                    validators=[MinValueValidator(Decimal('0.25'))], 
+                                    widget=forms.NumberInput(attrs={'placeholder': 'Enter Service Hours', 'id': 'hour-input', 'step': '0.25'}),
+                                    label='Service Hours',
+                                    initial='0.25')
+    
+    class Meta:
+        model = Service  # Le modèle associé à ce formulaire
+        fields = ['address', 'service_hours']
