@@ -50,6 +50,7 @@ INSTALLED_APPS = [
 
     # apps created
     'main',
+    'netfix',
     'services',
     'users'
 ]
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'netfix.session_timeout_middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'netfix.urls'
@@ -78,6 +80,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'netfix.context_processors.companies',
+                'netfix.context_processors.sessionTimeout',
             ],
         },
     },

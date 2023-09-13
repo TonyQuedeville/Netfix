@@ -1,9 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.db import transaction
 from django.core.exceptions import ValidationError
 from django.forms import ModelForm
-from .models import User, Company, Customer
+from .models import User, CompanyReview
 
 # widget personnalisée pour les champs de date
 class DateInput(forms.DateInput):
@@ -86,7 +85,7 @@ class CompanySignUpForm(UserCreationForm):
         fields = ('username', 'email', 'field')
 
 
-# formulaire de login
+# Formulaire de login
 class UserLoginForm(forms.Form):
     username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Enter Username'}))
     # email = forms.EmailField(widget=forms.TextInput(attrs={'placeholder': 'Enter Email'}))
@@ -100,3 +99,18 @@ class UserLoginForm(forms.Form):
         # self.fields['email'].widget.attrs['autocomplete'] = 'off'
         # self.fields['email'].widget.attrs['placeholder'] = 'Enter Email'
         self.fields['password'].widget.attrs['placeholder'] = 'Enter Password'
+    
+    
+# Formulaire d'évaluation d'entreprise
+class CompanyReviewForm(forms.ModelForm):
+    class Meta:
+        model = CompanyReview
+        fields = ['rating', 'comment']
+
+    rating = forms.IntegerField(
+        widget=forms.RadioSelect(choices=[(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5')]),
+    )
+    comment = forms.CharField(
+        widget = forms.Textarea(attrs={'rows': 4}),
+        required=False,
+    )

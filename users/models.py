@@ -64,3 +64,17 @@ class Company(models.Model):
 
     def __str__(self):
         return str(self.user.username)
+
+# Evaluation Company
+class CompanyReview(models.Model):
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    rating = models.IntegerField(validators=[MaxValueValidator(5), MinValueValidator(1)])
+    comment = models.TextField(blank=True, null=True)
+    date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('company', 'user')
+        
+    def get_display_rating(self):
+        return 6 - self.rating  # Inversion 5 <-> 1, 4 <-> 2      

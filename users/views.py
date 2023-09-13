@@ -1,16 +1,13 @@
-from cmath import log
-from distutils.log import Log
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import login, authenticate
-from django.views.generic import CreateView, TemplateView
-from django.contrib.sessions.models import Session
-from django.contrib.sessions.backends.db import SessionStore
-
-from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm
-from .models import User, Company, Customer
+from django.contrib.auth.decorators import login_required
+from django.views.generic import CreateView
+from .forms import CustomerSignUpForm, CompanySignUpForm, UserLoginForm, CompanyReviewForm
+from .models import User, Company, Customer, CompanyReview
 from django.contrib import messages
-from django.contrib.auth.views import LoginView, LogoutView, PasswordChangeView, PasswordChangeDoneView
 from django.views.decorators.csrf import csrf_protect
+from django.db.models import Avg
+
 
 def register(request):
     return render(request, 'users/register.html')
@@ -69,8 +66,6 @@ def LoginUserView(request):
             password = form.cleaned_data['password']
             user = authenticate(request, username=username, password=password)
             # user = authenticate(request, email=email, password=password)
-            print("authenticate:", user)
-            print({user.is_customer})
             if user is not None:
                 login(request, user)
                 # Redirection en fonction des valeurs is_customer et is_company
@@ -90,3 +85,18 @@ def LoginUserView(request):
         form = UserLoginForm()
     
     return render(request, 'users/login.html', {'form': form})
+
+
+@login_required
+def submit_review(request, company_id):
+    company = get_object_or_404(Company, pk=company_id)
+    existing_review = CompanyReview.objects.filter(user=request.user, company=company).first()
+    
+    if request.user.id == company.user_id: # Empeche l'auto évaluation
+        if request.method == 'POST':
+            form = CompanyReviewForm(request.POST, instance=existing_review)
+        else:
+            form = CompanyReviewForm()
+
+    return render(request, 'company/profile.html', {})
+

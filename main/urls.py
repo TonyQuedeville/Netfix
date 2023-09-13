@@ -5,6 +5,6 @@ app_name = "main"
 
 urlpatterns = [
     path('', v.home, name='home'),
-    path('companies/', v.company_list, name='home'),
+    path('companies/', v.company_list, name='company_list'),
     path('logout/', v.logout, name='logout'),
 ]

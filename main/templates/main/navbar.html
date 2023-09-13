@@ -38,6 +38,9 @@
                 <li><a href="{% url 'company_profile' name=request.user.username %}">Profile</a></li>
             {% endif %}
             <li><a href="/logout">Logout</a></li>
+            <!-- <div id="session-timer">
+                Votre session expirera dans : {{ session_expiry }} secondes
+            </div> -->
         {% else %}
             <li><a href="/users/register">Register</a></li>
             <li><a href="/users/login">Login</a></li>

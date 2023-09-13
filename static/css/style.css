@@ -365,3 +365,21 @@ span {
 }
 
 /* ============================================================================================== */
+/* ========================================= star-rating ======================================== */
+.star-rating input[type="radio"] {
+  display: none;
+}
+
+.star-rating label {
+  cursor: pointer;
+}
+
+.star-rating label::before {
+  content: "\2605"; /* Code Unicode pour une étoile pleine */
+  margin-right: 5px; /* Espacement entre les étoiles */
+  color: gray; /* Couleur par défaut des étoiles */
+}
+
+.star-rating input[type="radio"]:checked + label::before {
+  color: gold; /* Couleur de l'étoile sélectionnée */
+}

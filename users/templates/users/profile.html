@@ -47,5 +47,30 @@
             <div class="line"></div>
         </div>
         {% endfor %}
+
+        {% if request.user != company.user and request.user.is_customer %}
+            <h3>Ajouter une évaluation</h3>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <!-- {{ form.as_p }} -->
+                <div class="star-rating">
+                    <input type="radio" id="id_rating_5" name="{{ form.rating.name }}" value="5">
+                    <label for="id_rating_5"></label>
+                    <input type="radio" id="id_rating_4" name="{{ form.rating.name }}" value="4">
+                    <label for="id_rating_4"></label>
+                    <input type="radio" id="id_rating_3" name="{{ form.rating.name }}" value="3">
+                    <label for="id_rating_3"></label>
+                    <input type="radio" id="id_rating_2" name="{{ form.rating.name }}" value="2">
+                    <label for="id_rating_2"></label>
+                    <input type="radio" id="id_rating_1" name="{{ form.rating.name }}" value="1">
+                    <label for="id_rating_1"></label>
+                </div>
+                Commentaire:
+                {{ form.comment }}
+                <button type="submit">Ok</button>
+            </form>
+        {% endif %}
+
     {% endif %}
 {% endblock %}
