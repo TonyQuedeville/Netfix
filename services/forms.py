@@ -22,9 +22,15 @@ class CreateNewService(forms.ModelForm):
     )
     
     def __init__(self, *args, ** kwargs):
-        initial = kwargs.get('initial', {})
-        field = initial.get('field', None)
+        initial_field = kwargs.get('initial', {})
+        # field = initial_field.get('field', None)
+        
+        user = kwargs.pop('user', None)        
+        
         super(CreateNewService, self).__init__(*args, **kwargs)
+        
+        # Choix par defaut
+        initial_field = user.company.field
         
         # adding placeholders to form fields
         self.fields['name'].widget.attrs['placeholder'] = 'Enter Service Name'
@@ -32,24 +38,28 @@ class CreateNewService(forms.ModelForm):
         self.fields['description'].widget.attrs['placeholder'] = 'Enter Description'
         self.fields['price_hour'].widget.attrs['placeholder'] = 'Enter Price per Hour'
         
-        # Choix par defaut (mais ça marche pas ... !)
-        if field:
-            self.fields['field'].choices = [(field, field)]
-            
         # Méthode d'ajout des choix du champ field en dynamique
-        self.fields['field'].choices = [
-            ('Air Conditioner', 'Climatisation'),
-            ('Carpentry', 'Menuiserie'),
-            ('Electricity', 'Électricité'),
-            ('Gardening', 'Jardinage'),
-            ('Home Machines', 'Appareils ménagers'),
-            ('House Keeping', 'Entretien ménager'),
-            ('Interior Design', 'Design intérieur'),
-            ('Locks', 'Serrures'),
-            ('Painting', 'Peinture'),
-            ('Plumbing', 'Plomberie'),
-            ('Water Heaters', 'Chauffe-eau')
-        ]
+        field_choices = []
+        
+        if user.company and user.company.field == 'All in One':
+            field_choices = [
+                ('Air Conditioner', 'Climatisation'),
+                ('Carpentry', 'Menuiserie'),
+                ('Electricity', 'Électricité'),
+                ('Gardening', 'Jardinage'),
+                ('Home Machines', 'Appareils ménagers'),
+                ('House Keeping', 'Entretien ménager'),
+                ('Interior Design', 'Design intérieur'),
+                ('Locks', 'Serrures'),
+                ('Painting', 'Peinture'),
+                ('Plumbing', 'Plomberie'),
+                ('Water Heaters', 'Chauffe-eau')
+            ]
+        else:
+            field_choices = [(initial_field, initial_field)] if initial_field else []
+
+        self.fields['field'].choices = field_choices
+        self.fields['field'].initial = initial_field
     
     def clean_price_hour(self):
         price_hour = self.cleaned_data.get('price_hour')

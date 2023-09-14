@@ -7,6 +7,7 @@ from .models import User, Company, Customer, CompanyReview
 from django.contrib import messages
 from django.views.decorators.csrf import csrf_protect
 from django.db.models import Avg
+from django.urls import reverse
 
 
 def register(request):
@@ -31,7 +32,10 @@ class CustomerSignUpView(CreateView):
         customer.save() # Sauvegarde en BDD dans la table Customer
         
         login(self.request, user)
-        return redirect('/')
+        self.request.session['user_username'] = user.username
+        self.request.session['user_type'] = 'customer' 
+
+        return redirect(reverse('customer_profile', args=[user.username]))
 
 
 class CompanySignUpView(CreateView):
@@ -53,7 +57,10 @@ class CompanySignUpView(CreateView):
         company.save() # Sauvegarde en BDD dans la table Compagny
         
         login(self.request, user)
-        return redirect('/')
+        self.request.session['user_username'] = user.username
+        self.request.session['user_type'] = 'company'
+                
+        return redirect(reverse('company_profile', args=[user.username]))
 
 
 @csrf_protect

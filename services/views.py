@@ -23,13 +23,12 @@ def create(request):
     is_all_in_one = user.company.field == 'All in One'
     
     # Créez une instance de formulaire avec la valeur par défaut
-    form = CreateNewService(request.POST or None, initial={'field': user.company.field})
+    form = CreateNewService(request.POST or None, initial={'field': user.company.field}, user=user)
     
     if request.method == 'POST':
         # Si ce n'est pas un utilisateur "All in One", désactivez le champ "field"
         if not is_all_in_one:
             form.fields['field'].initial = user.company.field
-            form.fields['field'].widget.attrs['disabled'] = 'disabled'
     
         if form.is_valid():
             # Lorsque is_valid() est appelée, Django exécute automatiquement toutes les méthodes clean_<field_name>
@@ -50,10 +49,10 @@ def create(request):
             # Redirigez l'utilisateur vers la page du service nouvellement créé ou une autre page appropriée
             return HttpResponseRedirect('/services/') 
     else:
-        form = CreateNewService()
+        form = CreateNewService(user=user)
         if not is_all_in_one:
             form.fields['field'].initial = user.company.field
-            form.fields['field'].widget.attrs['disabled'] = 'disabled'
+            # form.fields['field'].widget.attrs['disabled'] = 'disabled'
     
     return render(request, 'services/create_service.html', {'form': form})
 

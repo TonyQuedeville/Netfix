@@ -6,8 +6,6 @@ from users.forms import CompanyReviewForm
 from services.models import Service, ServiceRequest
 from django.db.models import Avg
 
-# def home(request):
-#     return render(request, 'users/home.html', {'user': request.user})
 
 def customer_profile(request, name):
     user = get_object_or_404(User, username=name)
@@ -38,7 +36,10 @@ def company_profile(request, name):
     # paramètre à la vue.
     services = Service.objects.filter(company=company).order_by("-date")
     
-    if request.user.is_customer and request.user.id != company.user_id: # Empeche l'auto évaluation et l'evaluation entre entreprises
+    existing_review = None
+    form = None
+    
+    if request.user.is_authenticated and request.user.is_customer and request.user.id != company.user_id: # Empeche l'auto évaluation et l'evaluation entre entreprises
         existing_review = CompanyReview.objects.filter(user=request.user, company=company).first()
         
         if request.method == 'POST':
@@ -51,11 +52,10 @@ def company_profile(request, name):
                     rating.save()
                     
                     calculate_company_rating(company)
-        else:
-            form = CompanyReviewForm()
+        # else:
+        #     form = CompanyReviewForm()
     else:
-        existing_review = None
-        form = None
+        form = CompanyReviewForm(instance=existing_review)
 
     context = {
         'user': company.user,

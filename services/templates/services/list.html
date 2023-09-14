@@ -5,9 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <p class="title">Services</p>
+    <p class="title">Services</p>  
+
     {% if user.is_company %}
-        <a href="/company/{{company.username}}">{{company.username}}</a>
+        <a class="create_service" href="/services/create">Create Service</a>
     {% endif %}
 
     <div class='services_list'>
